@@ -13,26 +13,34 @@ class GameSprite(sprite.Sprite):
 class Player(GameSprite):
     def update(self):
         key_pressed = key.get_pressed()
-        if key_pressed[K_DOWN] and self.rect.y > 0:
+        if key_pressed[K_w] and self.rect.y > 20:
             self.rect.y -= self.speed
-        if key_pressed[K_UP] and self.rect.y < 635:
+        if key_pressed[K_s] and self.rect.y < 376:
             self.rect.y += self.speed
 
-win = display.set_mode((1800, 900))
-background = transform.scale(image.load('поле пп.jpg') , (1800, 900))
+    def update2(self):
+        key_pressed = key.get_pressed()
+        if key_pressed[K_UP] and self.rect.y > 20:
+            self.rect.y -= self.speed
+        if key_pressed[K_DOWN] and self.rect.y < 376:
+            self.rect.y += self.speed
+
+win = display.set_mode((1200, 600))
+background = transform.scale(image.load('pole.jpg') , (1200, 600))
 win.blit(background, (0,0))
-display.set_caption('пинг понг ру')
+display.set_caption('pp.py')
 
-x1 = 
-y1 = 
-x2 = 500
-y2 = 500
-x3 = 
-y3 = 
+x1 = 157
+y1 = 70
+x2 = 300
+y2 = 300
+x3 = 270
+y3 = 270
 
-one = Player('rocket.png', x1, y1, 10, 80, 100 )
-two = Player('bullet.png', x3, y3, 15, 20, 20)
-ball = ('vzxbr.png', x2, y2, 10, 20, 20)
+one = Player('1player.png', x1, y1, 10, 38, 200 )
+two = Player('2player.png', x3, y3, 15, 350, 700)
+#ball = ('vzxbr.png', x2, y2, 10, 20, 20)
+clock = time.Clock()
 
 game = True
 finish = False
@@ -40,6 +48,14 @@ while game:
     for e in event.get():
         if e.type == QUIT:
             game = False
-   
+    win.blit(background, (0,0))        
+    one.update()
+    two.update2()
+    
+    #ball.update()
+    one.reset()
+    two.reset()
+
     display.update()
     clock.tick(60)
+
