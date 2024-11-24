@@ -1,4 +1,8 @@
 from pygame import *
+number = 0
+table = 0
+wasd = input('Привет игрок 1! Как мне называть тебя?')
+dsaw = input('Привет игрок 2! А как тебя мне называть?')
 
 class GameSprite(sprite.Sprite):
     def __init__(self, player_image, player_x, player_y, player_speed, size_x, size_y):
@@ -34,7 +38,8 @@ class Boll(sprite.Sprite):
         self.rect.x = player_x
         self.rect.y = player_y
     def update(self):
-        
+        global table
+        global number
         if sprite.collide_rect(self, one):
             self.speed_x *= -1
         if sprite.collide_rect(self, two):
@@ -45,6 +50,14 @@ class Boll(sprite.Sprite):
             self.speed_y *= -1
         self.rect.x += self.speed_x     
         self.rect.y += self.speed_y
+        if self.rect.x <=0:
+            self.rect.x = 575
+            self.rect.y = 260
+            table += 1
+        if self.rect.x >=1150:
+            self.rect.x = 576
+            self.rect.y = 262
+            number += 1
 
     def reset(self):
         win.blit(self.image, (self.rect.x, self.rect.y))
@@ -54,6 +67,13 @@ win = display.set_mode((1200, 600))
 background = transform.scale(image.load('pole.jpg') , (1200, 600))
 win.blit(background, (0,0))
 display.set_caption('pp.py')
+
+font.init()
+font = font.SysFont('Arial', 35)
+play1er = font.render(f'{wasd}: ', True, (255, 255, 255))
+play2er = font.render(f'{dsaw}: ', True, (255, 255, 255))
+fdg = font.render('первый игрок одержал победу!', True, (255,255,255))
+winn = font.render('второй игрок одержал победу!', True, (255,255,255))
 
 x1 = 157
 y1 = 70
@@ -69,19 +89,31 @@ clock = time.Clock()
 
 game = True
 finish = False
+
 while game:
     for e in event.get():
         if e.type == QUIT:
             game = False
-    win.blit(background, (0,0))  
+    if finish != True:
+        win.blit(background, (0,0))  
+        play1er = font.render(f'{wasd}: {str(number)}', True, (125, 232, 143))
+        play2er = font.render(f'{dsaw}: {str(table)}', True, (125, 232, 143))
+        win.blit(play1er, (198, 50))
+        win.blit(play2er, (764, 50))
+        one.update()
+        two.update2()
+        ball.update()
 
-    one.update()
-    two.update2()
-    ball.update()
+        one.reset()
+        two.reset()
+        ball.reset()
+        if number >=3:
+            finish = True
+            win.blit(fdg, (370, 522))
+        if table >=3:
+            finish = True
+            win.blit(winn, (370, 522))
 
-    one.reset()
-    two.reset()
-    ball.reset()
 
     display.update()
     clock.tick(60)
